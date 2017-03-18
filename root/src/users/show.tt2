@@ -1,0 +1,61 @@
+[% META title = 'User Profile' -%]
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment" style="padding: 200px">
+        <div class="ui text container">
+            [% IF c.user_exists && c.user.id==user.id %]
+                <h1 class="ui inverted header">
+                    <h1>Welcome [% user.username %]</h1>
+                </h1>
+                <a class="ui huge primary button" href="/posts/create" >Write a Post <i class="write icon"></i></a>
+            [% ELSE %]
+                <h1 class="ui inverted header">
+                    <h1>User Name: [% user.username %]</h1>
+                    <h4>Email: [% user.email %]</h4>
+                </h1>
+            [% END %]
+        </div>
+    </div>
+</div>
+
+<div class="ui container">
+[% IF c.user_exists && c.user.id==user.id %]
+    <div class="ui horizontal divider">
+        Your Posts
+    </div>
+[% ELSE %]
+    <div class="ui horizontal divider">
+        Posts
+    </div>
+[% END %]
+    [% FOREACH post IN user.posts -%]
+        <div class="item">
+            <div class="content">
+                <a href="[% c.uri_for(c.controller.action_for('show'), [post.id]) %]" class="header">[% post.title %]</a>
+                <div class="meta">
+                    <span>Last edit: [% post.updated_at %]</span>
+                </div>
+                <div class="description">
+                    <p>[% post.body %]</p>
+                </div>
+                [% IF c.user_exists && c.user.id==post.uid || c.user.role=='admin'%]
+                    <div class="extra">
+                        <div class="ui buttons">
+                            <a href="[% c.uri_for(c.controller.action_for('edit'), [post.id]) %]" class="ui primary button">Edit</a>
+                            <form action="[% c.uri_for(c.controller.action_for('delete'), [post.id]) %]?x-tunneled-method=DELETE" method="post">
+                                <input type="hidden" name="_http_method" value="delete">
+                                <input type="submit" class="ui red button" value="Delete">
+                            </form>
+
+                        </div>
+                    </div>
+                [% ELSE %]
+                    Please login to create or edit your posts
+                    <a class="ui link" href="/login"> Login</a>
+                [% END %]
+
+            </div>
+        </div>
+    [% END -%]
+</div>
+
+

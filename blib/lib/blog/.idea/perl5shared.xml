@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="TemplateToolkitSettings">
+    <option name="substitutedExtensions">
+      <list>
+        <option value="*.tt" />
+        <option value="*.tt2" />
+      </list>
+    </option>
+    <option name="TEMPLATE_DIRS">
+      <list>
+        <option value="root/src" />
+      </list>
+    </option>
+  </component>
+</project>

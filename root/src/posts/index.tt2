@@ -1,0 +1,45 @@
+[% # This is a TT comment. -%]
+ 
+[%- # Provide a title -%]
+[% META title = 'Post List' -%]
+ 
+[% # Note That the '-' at the beginning or end of TT code  -%]
+[% # "chomps" the whitespace/newline at that end of the    -%]
+[% # output (use View Source in browser to see the effect) -%]
+ 
+[% # Some basic HTML with a loop to display books -%]
+
+<h1>Posts</h1>
+<div class="ui items">
+    [% # Display each book in a table row %]
+    [% FOREACH post IN posts -%]
+        <div class="item">
+            <div class="content">
+                <a href="[% c.uri_for(c.controller.action_for('show'), [post.id]) %]" class="header">[% post.title %]</a>
+                <div class="meta">
+                    <span>Author: <a href="[%  c.uri_for(c.controller.action_for('show'), [post.user.id]) %]">[% post.user.username %]</a></span>
+                    <span>Last edit: [% post.updated_at %]</span>
+                </div>
+                <div class="description">
+                    <p>[% post.body %]</p>
+                </div>
+                [% IF c.user_exists && c.user.id==post.uid || c.user.role=='admin'%]
+                    <div class="extra">
+                        <div class="ui buttons">
+                            <a href="[% c.uri_for(c.controller.action_for('edit'), [post.id]) %]" class="ui primary button">Edit</a>
+                            <form action="[% c.uri_for(c.controller.action_for('delete'), [post.id]) %]?x-tunneled-method=DELETE" method="post">
+                                <input type="hidden" name="_http_method" value="delete">
+                                <input type="submit" class="ui red button" value="Delete">
+                            </form>
+
+                        </div>
+                    </div>
+                [% ELSE %]
+                    Please login to create or edit your posts
+                    <a class="ui link" href="/login"> Login</a>
+                [% END %]
+
+            </div>
+        </div>
+    [% END -%]
+</div>

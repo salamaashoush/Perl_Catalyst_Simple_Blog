@@ -1,0 +1,60 @@
+[% # This is a TT comment. -%]
+ 
+[%- # Provide a title -%]
+[% META title = 'Post Show' -%]
+ 
+[% # Note That the '-' at the beginning or end of TT code  -%]
+[% # "chomps" the whitespace/newline at that end of the    -%]
+[% # output (use View Source in browser to see the effect) -%]
+ 
+[% # Some basic HTML with a loop to display books -%]
+<h1 class="ui header">[% post.title %]</h1>
+<p>Author: <a href="[%  c.uri_for(c.controller.action_for('show'), [post.user.id]) %]">[% post.user.username %]</a></p>
+<div class="ui segment">
+    <h3>[% post.body %]</h3>
+</div>
+<div class="ui horizontal divider">
+    Comments
+</div>
+<div class="ui comments">
+    [% FOREACH comment IN post.comments -%]
+        <div class="comment">
+            <div class="content">
+                <a class="author" href="[%  c.uri_for(c.controller.action_for('show'), [comment.user.id]) %]">[% comment.user.username %]</a>
+                <div class="metadata">
+                    <span class="date">[% comment.updated_at %]</span>
+                </div>
+                <div class="text">
+                    [% comment.content %]
+                </div>
+                [% IF c.user_exists && c.user.id==comment.uid || c.user.role=='admin'%]
+                    <form action="[% c.uri_for(c.controller.action_for('rmcomment'), [comment.id]) %]?x-tunneled-method=DELETE" method="post">
+                        <div class="actions">
+                            <button class="ui small red button" type="submit"><i class="remove icon"></i> Delete</button>
+                        </div>
+                    </form>
+                [% END %]
+
+            </div>
+        </div>
+    [% END -%]
+</div>
+[% IF c.user_exists %]
+<div class="ui horizontal divider">
+    Leave a Comment
+</div>
+<form class="ui reply form" method="post" action="/posts/comment">
+    <div class="field">
+        <input type="hidden" name="pid" id="" value="[% post.id %]">
+        <input type="hidden" name="uid" id="" value="[% c.user.id %]">
+        <textarea name="content"></textarea>
+    </div>
+    <button class="ui blue labeled submit icon button" type="submit">
+        <i class="icon edit"></i> Add Comment
+    </button>
+</form>
+[% ELSE %]
+<div class="ui horizontal divider">
+    <a href="/login">Login</a> to leave a comment
+</div>
+[% END %]

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>[% template.title or "My Blog App!" %]</title>
+<link rel="stylesheet" href="[% c.uri_for('/static/dist/semantic.min.css') %]" />
+</head>
+ 
+<body>
+<div class="ui large top inverted fixed main menu">
+    <div class="ui container">
+        <a class="item" href="/">
+            Home
+        </a>
+        <a class="item" href="/posts">
+            Posts
+        </a>
+        <a class="item" href="/users">
+            Users
+        </a>
+        [% IF c.user_exists %]
+            <a class="ui item" href="[% c.uri_for('/users/')%][% c.user.id %]">[% c.user.username %]</a>
+            <a class="item " href="[% c.uri_for('/users/edit/')%][% c.user.id %]">
+                Edit Profile
+            </a>
+            <a class="ui item" href="/logout"> Logout</a>
+        [% ELSE %]
+            <a class="ui item" href="/login"> Login</a>
+        [% END %]
+        </div>
+    </div>
+</div>
+ 
+<div class="ui container" style="padding-top: 80px">
+    [%# Status and error messages %]
+    [% IF c.flash.error_msg %]
+        <div class="ui warning message">
+            <i class="close icon"></i>
+            <div class="header">
+                Error
+            </div>
+            [% error_msg %]
+        </div>
+    [% END %]
+   [% IF c.flash.status_msg %]
+       <div class="ui info message">
+           <i class="close icon"></i>
+           <div class="header">
+               Message
+           </div>
+           [% status_msg %]
+       </div>
+   [% END %]
+
+    [%# This is where TT will stick all of your template's contents. -%]
+    [% content %]
+</div>
+</div>
+
+</div>
+<script src="[% c.uri_for('/static/jquery-3.1.1.min.js') %]" ></script>
+<script src="[% c.uri_for('/static/dist/semantic.min.js') %]" ></script>
+<script>
+    $('.ui.checkbox').checkbox();
+    $('.special.cards .image').dimmer({
+        on: 'hover'
+    });
+    $('.message .close')
+            .on('click', function() {
+                $(this)
+                        .closest('.message')
+                        .transition('fade')
+                ;
+            })
+    ;
+</script>
+</body>
+</html>
